@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QPushButton>
+#include "subwidget.h"
 
 namespace Ui {
 class MainWidget;
@@ -15,20 +16,17 @@ class MainWidget : public QWidget//主窗口
 public:
     explicit MainWidget(QWidget *parent = 0);
     ~MainWidget();
+    void dealBack();
 protected:
     void paintEvent(QPaintEvent *);//绘背景图
-
-
 private slots:
     void on_Begin_clicked();
 
-    void on_Exit_clicked();
-
 private:
     Ui::MainWidget *ui;
-    //QPushButton p1;//退出按钮
     QPushButton Begin;
     QPushButton Exit;
+    SubWidget Subw;
 };
 
 #endif // WIDGET_H

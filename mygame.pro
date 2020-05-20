@@ -25,14 +25,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    Mainwidget.cpp
+    Mainwidget.cpp \
+    subwidget.cpp \
+    map1.cpp \
+    map2.cpp \
+    map3.cpp
 
 HEADERS += \
-    Mainwidget.h
+    Mainwidget.h \
+    subwidget.h \
+    map1.h \
+    map2.h \
+    map3.h
 
 FORMS += \
-    Mainwidget.ui
+    Mainwidget.ui \
+    subw.ui \
+    map1.ui
 
 RESOURCES += \
     images.qrc
+
+DISTFILES +=
 

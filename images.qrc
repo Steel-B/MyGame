@@ -4,4 +4,20 @@
         <file>Exit.png</file>
         <file>Menu.jpg</file>
     </qresource>
+    <qresource prefix="/guanqia">
+        <file>1.png</file>
+        <file>2.png</file>
+        <file>3.png</file>
+        <file>b1.png</file>
+        <file>b2.png</file>
+        <file>b3.png</file>
+        <file>grey.png</file>
+        <file>black.png</file>
+        <file>back.png</file>
+    </qresource>
+    <qresource prefix="/maps">
+        <file>map1.jpg</file>
+        <file>map2.jpg</file>
+        <file>map3.jpg</file>
+    </qresource>
 </RCC>
