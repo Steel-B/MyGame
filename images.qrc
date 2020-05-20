@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/Images">
+        <file>Begin.png</file>
+        <file>Exit.png</file>
+        <file>Menu.jpg</file>
+    </qresource>
+</RCC>
