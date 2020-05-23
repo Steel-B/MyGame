@@ -1,6 +1,6 @@
 #include "place.h"
 
-Place::Place()
+Place::Place(QWidget *parent) : QWidget(parent)
 {
 
 }
