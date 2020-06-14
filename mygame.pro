@@ -25,26 +25,44 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    Mainwidget.cpp \
     subwidget.cpp \
-    map1.cpp \
-    map2.cpp \
-    map3.cpp
+    map.cpp \
+    mainwidget.cpp \
+    place.cpp \
+    object.cpp \
+    elf.cpp \
+    enemy.cpp \
+    bullet.cpp
 
 HEADERS += \
-    Mainwidget.h \
     subwidget.h \
-    map1.h \
-    map2.h \
-    map3.h
+    map.h \
+    mainwidget.h \
+    place.h \
+    object.h \
+    elf.h \
+    enemy.h \
+    collision.h \
+    bullet.h
 
 FORMS += \
-    Mainwidget.ui \
-    subw.ui \
-    map1.ui
+    map1.ui \
+    place.ui \
+    subwidget.ui \
+    mainwidget.ui \
+    option.ui \
+    result.ui \
+    result.ui
 
 RESOURCES += \
     images.qrc
 
-DISTFILES +=
+DISTFILES += \
+    images/place point/cancel.png \
+    images/place point/grass.png \
+    images/place point/ice.png \
+    images/place point/rock.png \
+    images/place point/sell.png \
+    images/place point/up1.png \
+    images/place point/up2.png
 

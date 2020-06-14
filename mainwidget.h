@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QPainter>
 #include <QPushButton>
 #include "subwidget.h"
 
@@ -16,9 +17,9 @@ class MainWidget : public QWidget//主窗口
 public:
     explicit MainWidget(QWidget *parent = 0);
     ~MainWidget();
+    void paintEvent(QPaintEvent *);
     void dealBack();
-protected:
-    void paintEvent(QPaintEvent *);//绘背景图
+    //void dealmap1();
 private slots:
     void on_Begin_clicked();
 

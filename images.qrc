@@ -1,23 +1,67 @@
 <RCC>
-    <qresource prefix="/Images">
-        <file>Begin.png</file>
-        <file>Exit.png</file>
-        <file>Menu.jpg</file>
-    </qresource>
-    <qresource prefix="/guanqia">
-        <file>1.png</file>
-        <file>2.png</file>
-        <file>3.png</file>
-        <file>b1.png</file>
-        <file>b2.png</file>
-        <file>b3.png</file>
-        <file>grey.png</file>
-        <file>black.png</file>
-        <file>back.png</file>
-    </qresource>
-    <qresource prefix="/maps">
-        <file>map1.jpg</file>
-        <file>map2.jpg</file>
-        <file>map3.jpg</file>
+    <qresource prefix="/images">
+        <file>images/elf/grass1.png</file>
+        <file>images/elf/grass2.png</file>
+        <file>images/elf/grass3.png</file>
+        <file>images/elf/ice1.png</file>
+        <file>images/elf/ice2.png</file>
+        <file>images/elf/ice3.png</file>
+        <file>images/elf/rock1.png</file>
+        <file>images/elf/rock2.png</file>
+        <file>images/elf/rock3.png</file>
+        <file>images/elf/bullet/aerolite.png</file>
+        <file>images/elf/bullet/bubble.png</file>
+        <file>images/elf/bullet/ice cube.png</file>
+        <file>images/elf/bullet/ice piton(L).png</file>
+        <file>images/elf/bullet/ice piton(S).png</file>
+        <file>images/elf/bullet/rock(L).png</file>
+        <file>images/elf/bullet/rock(S).png</file>
+        <file>images/enemy/丑1.png</file>
+        <file>images/enemy/丑2.png</file>
+        <file>images/enemy/龙1.png</file>
+        <file>images/enemy/龙2.png</file>
+        <file>images/enemy/兔1.png</file>
+        <file>images/enemy/兔2.png</file>
+        <file>images/enemy/巫1.png</file>
+        <file>images/enemy/巫2.png</file>
+        <file>images/enemy/无棍巫2.png</file>
+        <file>images/enemy/bullet/红球.png</file>
+        <file>images/enemy/bullet/蓝球.png</file>
+        <file>images/enemy/bullet/木棍2.png</file>
+        <file>images/levels/1.png</file>
+        <file>images/levels/2.png</file>
+        <file>images/levels/3.png</file>
+        <file>images/levels/b1.png</file>
+        <file>images/levels/b2.png</file>
+        <file>images/levels/b3.png</file>
+        <file>images/levels/back.png</file>
+        <file>images/levels/grey.png</file>
+        <file>images/maps/map1.jpg</file>
+        <file>images/maps/map2.jpg</file>
+        <file>images/maps/map3.jpg</file>
+        <file>images/maps/波次.png</file>
+        <file>images/maps/返回.png</file>
+        <file>images/maps/金币.png</file>
+        <file>images/menu/Begin.png</file>
+        <file>images/menu/Exit.png</file>
+        <file>images/place point/cancel.png</file>
+        <file>images/place point/grass.png</file>
+        <file>images/place point/ice.png</file>
+        <file>images/place point/rock.png</file>
+        <file>images/place point/sell.png</file>
+        <file>images/place point/up1.png</file>
+        <file>images/place point/up2.png</file>
+        <file>images/menu/Menu.png</file>
+        <file>images/maps/开始.png</file>
+        <file>images/place point/place.png</file>
+        <file>images/place point/empt.png</file>
+        <file>images/maps/生命.png</file>
+        <file>images/maps/终点.png</file>
+        <file>images/enemy/血条1.png</file>
+        <file>images/enemy/血条2.png</file>
+        <file>images/maps/win.png</file>
+        <file>images/maps/fail.png</file>
+        <file>images/maps/退出游戏.png</file>
+        <file>images/maps/重新开始.png</file>
     </qresource>
 </RCC>
