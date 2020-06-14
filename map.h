@@ -35,6 +35,7 @@ public:
     void paintEvent(QPaintEvent *event);
     //QPainter* get_painter();
     QList<Enemy*> get_enemy_list();
+    void set_map(QPixmap p){map = p;}
 signals:
 
 public slots:
@@ -49,6 +50,7 @@ private:
     QList<Enemy*> enemy_list;
     QList<Place*> place_list;
     bool game_win;
+    QPixmap map;
     //QPainter painter;
 };
 class Result : public QWidget
@@ -67,7 +69,7 @@ class Map1 : public Map
 public:
     explicit Map1(Map *parent = nullptr);
     ~Map1();
-    void paintEvent(QPaintEvent *);
+    //void paintEvent(QPaintEvent *);
     void addPlaces();
     void addWayPoints();
     void updateMap1();

@@ -1,7 +1,7 @@
 #include "enemy.h"
 #include "ui_object.h"
 #include "collision.h"
-
+#include <QDebug>
 
 //航点类
 WayPoint::WayPoint(QPoint pos):
@@ -33,8 +33,8 @@ Enemy::Enemy(Object *parent) : Object(parent)
     set_max_blood(60);
     move_speed = 1;
     m_active =false;
-    this->resize(100,100);
-    pixmap= QPixmap(":/images/images/elf/rock1.png");
+    this->resize(80,80);
+    pixmap= QPixmap(":/images/images/enemy/兔1.png");
     //this->setStyleSheet(tr("border-image: url(:/images/images/elf/rock1.png);"));
 }
 void Enemy::draw(QPainter *painter){
@@ -44,7 +44,8 @@ void Enemy::draw(QPainter *painter){
     static const int Health_Bar_Width = 20;
     painter->save();
     painter->drawPixmap(get_current_pos(),pixmap);
-    QPoint healthBarPoint = get_current_pos() + QPoint(-Health_Bar_Width / 2 - 5, -height() / 3);
+    qDebug()<<"the enemy's current position is"<<get_current_pos()<<endl;
+    QPoint healthBarPoint = get_current_pos() + QPoint(15, -height() / 6);
     // 绘制血条
     painter->setPen(Qt::NoPen);
     painter->setBrush(Qt::red);
@@ -54,23 +55,23 @@ void Enemy::draw(QPainter *painter){
     QRect healthBarRect(healthBarPoint, QSize((double)get_now_blood() / get_max_blood() * Health_Bar_Width, 2));
     painter->drawRect(healthBarRect);
     // 绘制偏转坐标,由中心+偏移=左上
-    static const QPoint offsetPoint(-width() / 2, -height() / 2);
+    //static const QPoint offsetPoint(-width() / 2, -height() / 2);
     //static const QPoint offsetPoint(100, 100);
 
-    painter->translate(get_current_pos());
+    //painter->translate(get_current_pos());
 
     //painter->rotate(m_rotationSprite);
     // 绘制敌人
-    painter->drawPixmap(QPoint(0,0), pixmap);
+    //painter->drawPixmap(QPoint(0,0), pixmap);
     painter->restore();
 }
 void Enemy::march(){
     if(!m_active)return;    //如果敌人不能行动，则返回
-    if(collision(this->get_center_pos(),1,this->destination.pos(),1)){
+    if(collision(this->get_current_pos(),1,this->destination.pos(),1)){
         //敌人抵达一个航点
         if(destination.next()){
             //有下一个航点
-            this->set_center_pos(destination.pos());
+            this->set_current_pos(destination.pos());
             destination = destination.next();
         }
         else{//敌人进入基地
@@ -84,9 +85,9 @@ void Enemy::march(){
     // 未来修改这个可以添加移动状态,加快,减慢,m_walkingSpeed是基准值
     // 向量标准化
     double movementSpeed = move_speed;
-    QVector2D normalized(targetPoint - get_center_pos());
+    QVector2D normalized(targetPoint - get_current_pos());
     normalized.normalize();
-    set_center_pos(get_center_pos() + normalized.toPoint() * movementSpeed);
+    set_current_pos(get_current_pos() + normalized.toPoint() * movementSpeed);
     // 确定敌人选择方向
     // 默认图片向左,需要修正180度转右
     //m_rotationSprite = qRadiansToDegrees(qAtan2(normalized.y(), normalized.x())) + 180;

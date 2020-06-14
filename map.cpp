@@ -4,6 +4,7 @@
 //#include "ui_map3.h"
 #include "elf.h"
 #include "ui_result.h"
+#include <QDebug>
 
 Map::Map(QWidget *parent) : QWidget(parent)
 {
@@ -22,20 +23,27 @@ Map::~Map(){
 void Map::set_round_total(int n){
     this->round_total = n;
 }
-//绘制敌人
+//绘制
 void Map::paintEvent(QPaintEvent *event){
     QPainter painter(this);
-    foreach (Enemy* enemy, enemy_list) {
-        //enemy->draw(&painter);
+    painter.drawPixmap(0,0,width(),height(),map);
+    int i=0;
+    foreach (Enemy* enemy, get_enemy_list()) {
+        enemy->draw(&painter);
+        i++;
+        qDebug()<<"the "<<i<<" enemy was drawed"<<endl;
+        qDebug()<<"current position is"<<enemy->currentPos()<<endl;
     }
 }
 //更新画面
 void Map::updateMap()
 {
-    QPainter painter(this);
+    char i='0';
     foreach (Enemy *enemy, enemy_list){
-        //enemy->draw(&painter);
         enemy->march();
+        i++;
+        qDebug()<<"the "<<i<<" enemy marched"<<endl;
+        qDebug()<<"current position is"<<enemy->currentPos()<<endl;
     }
     update();
 }
@@ -130,15 +138,17 @@ Map1::Map1(Map *parent) :
     ui(new Ui::Map1)
 {
     ui->setupUi(this);
+    //载入地图
+    set_map(QPixmap("images/maps/map1.jpg"));
     set_round_total(5);//总波数为5
     addPlaces();
     addWayPoints();
-    QTimer *timer = new QTimer(this);
-    connect(timer,SIGNAL(timeout()),this,SLOT(updateMap1()));
-    timer->start(30);
+    //QTimer *timer = new QTimer(this);
+    //connect(timer,SIGNAL(timeout()),this,SLOT(updateMap1()));
+    //timer->start(30);
 }
 Map1::~Map1(){}
-void Map1::paintEvent(QPaintEvent *){
+/*void Map1::paintEvent(QPaintEvent *){
     QPainter painter;
     painter.begin(this);
     painter.drawPixmap(0,0,width(),height(),QPixmap("images/maps/map1.jpg"));
@@ -147,7 +157,7 @@ void Map1::paintEvent(QPaintEvent *){
         enemy->draw(&painter);
         enemy->march();
     }
-}
+}*/
 void Map1::updateMap1(){
     QPainter painter;
     painter.begin(this);
@@ -159,62 +169,62 @@ void Map1::updateMap1(){
 //添加防御塔位置
 void Map1::addPlaces(){
     Place *b1 = new Place(this);
-    b1->move(400,70);
+    b1->move(400,60);
     place_list.push_back(b1);
     Place *b2 = new Place(this);
-    b2->move(610,50);
+    b2->move(610,40);
     place_list.push_back(b2);
     Place *b3 = new Place(this);
     b3->move(310,230);
     place_list.push_back(b3);
     Place *b4 = new Place(this);
-    b4->move(520,380);
+    b4->move(520,370);
     place_list.push_back(b4);
     for(int i=0;i<4;i++){
         connect(place_list[i],SIGNAL(build_rock(int,int)),this,SLOT(build_rock(int,int)));
     }
 }
 void Map1::addWayPoints(){
-    WayPoint *waypoint1 = new WayPoint(QPoint(1170,280));
+    WayPoint *waypoint1 = new WayPoint(QPoint(1130,240));
     waypoint_list.push_back(waypoint1);
 
-    WayPoint *waypoint2 = new WayPoint(QPoint(850,260));
+    WayPoint *waypoint2 = new WayPoint(QPoint(830,220));
     waypoint_list.push_back(waypoint2);
     waypoint1->setNext(waypoint2);
 
-    WayPoint *waypoint3 = new WayPoint(QPoint(790,110));
+    WayPoint *waypoint3 = new WayPoint(QPoint(770,90));
     waypoint_list.push_back(waypoint3);
     waypoint2->setNext(waypoint3);
 
-    WayPoint *waypoint4 = new WayPoint(QPoint(660,120));
+    WayPoint *waypoint4 = new WayPoint(QPoint(620,100));
     waypoint_list.push_back(waypoint4);
     waypoint3->setNext(waypoint4);
 
-    WayPoint *waypoint5 = new WayPoint(QPoint(610,260));
+    WayPoint *waypoint5 = new WayPoint(QPoint(570,240));
     waypoint_list.push_back(waypoint5);
     waypoint4->setNext(waypoint5);
 
-    WayPoint *waypoint6 = new WayPoint(QPoint(360,310));
+    WayPoint *waypoint6 = new WayPoint(QPoint(320,290));
     waypoint_list.push_back(waypoint6);
     waypoint5->setNext(waypoint6);
 
-    WayPoint *waypoint7 = new WayPoint(QPoint(360,420));
+    WayPoint *waypoint7 = new WayPoint(QPoint(320,400));
     waypoint_list.push_back(waypoint7);
     waypoint6->setNext(waypoint7);
 
-    WayPoint *waypoint8 = new WayPoint(QPoint(710,450));
+    WayPoint *waypoint8 = new WayPoint(QPoint(720,430));
     waypoint_list.push_back(waypoint8);
     waypoint7->setNext(waypoint8);
 
-    WayPoint *waypoint9 = new WayPoint(QPoint(730,570));
+    WayPoint *waypoint9 = new WayPoint(QPoint(710,550));
     waypoint_list.push_back(waypoint9);
     waypoint8->setNext(waypoint9);
 
-    WayPoint *waypoint10 = new WayPoint(QPoint(560,610));
+    WayPoint *waypoint10 = new WayPoint(QPoint(520,590));
     waypoint_list.push_back(waypoint10);
     waypoint9->setNext(waypoint10);
 
-    WayPoint *waypoint11 = new WayPoint(QPoint(540,740));
+    WayPoint *waypoint11 = new WayPoint(QPoint(500,720));
     waypoint_list.push_back(waypoint11);
     waypoint10->setNext(waypoint11);
 }
