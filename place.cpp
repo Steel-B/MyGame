@@ -1,6 +1,5 @@
 #include "place.h"
 #include "ui_place.h"
-#include "elf.h"
 
 Place::Place(QWidget *parent) :
     QWidget(parent),
@@ -39,15 +38,6 @@ void Place::on_cancel1_clicked()
     ui->cancel1->hide();
     ui->button->show();
 }
-//点击二级取消键
-//决定移植此功能到选项类中
-/*void Place::on_cancel2_clicked()
-{
-    ui->sell->hide();
-    ui->up->hide();
-    ui->cancel2->hide();
-}
-*/
 
 //小石怪类
 void Place::on_rock_clicked()

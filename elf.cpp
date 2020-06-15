@@ -31,6 +31,8 @@ Elf::~Elf(){
 Rock::Rock(Elf *parent):
     Elf(parent)
 {
+    set_CD_time(3000);
+    set_range(200);
     this->setStyleSheet(tr("border-image: url(:/images/images/elf/rock1.png);"));
 }
 Rock::paintEvent(){

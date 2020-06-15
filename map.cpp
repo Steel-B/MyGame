@@ -2,7 +2,6 @@
 #include "ui_map1.h"
 //#include "ui_map2.h"
 //#include "ui_map3.h"
-#include "elf.h"
 #include "ui_result.h"
 #include <QDebug>
 
@@ -10,7 +9,6 @@ Map::Map(QWidget *parent) : QWidget(parent)
 {
     money = 200;//初始金币为200
     round_now=0;//当前为第0波
-    //painter.begin(this);
     //将所有敌人的damage信号遍历并处理
     for(int i=0;i<enemy_list.length();i++)
         connect(enemy_list[i],&Enemy::damage_base,this,&Map::deal_damage);
@@ -28,25 +26,63 @@ void Map::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     painter.drawPixmap(0,0,width(),height(),map);
     int i=0;
-    foreach (Enemy* enemy, get_enemy_list()) {
+    foreach (Enemy* enemy, enemy_list) {
         enemy->draw(&painter);
         i++;
         qDebug()<<"the "<<i<<" enemy was drawed"<<endl;
         qDebug()<<"current position is"<<enemy->currentPos()<<endl;
+    }
+    foreach (Bullet *bullet,bullet_list){
+        bullet->draw(&painter);
+        qDebug()<<"the "<<i<<" bullet was drawed";
+        qDebug()<<"this bullet's current position is"<<bullet->current_pos();
     }
 }
 //更新画面
 void Map::updateMap()
 {
     char i='0';
+    foreach (Elf *elf, elf_list) {
+        foreach (Enemy *enemy, enemy_list){
+            //如果敌人进入攻击范围
+            qDebug()<<"one enemy was checked";
+            if(distance(elf->get_current_pos(),enemy->get_current_pos())<=elf->get_range()){
+                attack(elf,enemy);
+                qDebug()<<"one enemy was aimed";
+            }
+        }
+    }
     foreach (Enemy *enemy, enemy_list){
         enemy->march();
         i++;
-        qDebug()<<"the "<<i<<" enemy marched"<<endl;
-        qDebug()<<"current position is"<<enemy->currentPos()<<endl;
+        qDebug()<<"the "<<i<<" enemy marched";
+        qDebug()<<"current position is"<<enemy->currentPos();
+        if(enemy->get_current_blood()<=0)removedEnemy(enemy);
+    }
+    foreach (Bullet *bullet,bullet_list){
+        bullet->move();
+        qDebug()<<"the "<<i<<" bullet moved";
+        //如果子弹已击中，移去
+        if(bullet->get_state()){
+            removedBullet(bullet);
+        }
     }
     update();
 }
+//遍历所有塔与敌人
+/*void Map::updateTarget(){
+    foreach (Elf *elf, elf_list) {
+        foreach (Enemy *enemy, enemy_list){
+            //如果敌人进入攻击范围
+            qDebug()<<"one enemy was checked";
+            if(distance(elf->get_current_pos(),enemy->get_current_pos())<=elf->get_range()){
+                attack(elf,enemy);
+                qDebug()<<"one enemy was aimed";
+            }
+        }
+    }
+}
+*/
 //怪物进入基地
 void Map::deal_damage(){
     life--;
@@ -82,12 +118,16 @@ void Map::removedEnemy(Enemy* enemy){
 }
 //子弹击中，移去
 void Map::removedBullet(Bullet* bullet){
+    Q_ASSERT(bullet);
+    bullet_list.removeOne(bullet);
     delete bullet;
 }
 //创建小石头
 void Map::build_rock(int x,int y){
     Rock* rock;
     rock = new Rock;
+    rock->set_current_pos(QPoint(x,y));
+    elf_list.push_back(rock);
     rock->resize(80,80);
     rock->setParent(this);
     rock->getopt()->setParent(this);
@@ -110,15 +150,25 @@ bool Map::loadWave(int *enemyStartInterval){
         enemy_list.push_back(enemy);
         QTimer::singleShot(enemyStartInterval[i], enemy, SLOT(doActiate()));
     }
-
+    return true;
 }
-QList<Enemy*> Map::get_enemy_list(){
+/*QList<Enemy*> Map::get_enemy_list(){
     return enemy_list;
-}
-
-/*QPainter* Map::get_painter(){
-    return &painter;
 }*/
+void Map::attack(Object *attacker,Object *target){
+    //如果在冷却中
+    if(!attacker->get_attack_ablt())return;
+    //如果冷却结束
+    Bullet *bullet = new Bullet;
+    bullet->setParent(this);
+    bullet->set_current(attacker->get_current_pos());
+    bullet->set_target_object(target);
+    bullet_list.push_back(bullet);
+    //攻击者冷却
+    attacker->change_attack_ablt();
+    attacker->cooldown();
+
+}
 
 //结果界面
 Result::Result(QWidget *parent):
@@ -143,29 +193,11 @@ Map1::Map1(Map *parent) :
     set_round_total(5);//总波数为5
     addPlaces();
     addWayPoints();
-    //QTimer *timer = new QTimer(this);
-    //connect(timer,SIGNAL(timeout()),this,SLOT(updateMap1()));
-    //timer->start(30);
 }
-Map1::~Map1(){}
-/*void Map1::paintEvent(QPaintEvent *){
-    QPainter painter;
-    painter.begin(this);
-    painter.drawPixmap(0,0,width(),height(),QPixmap("images/maps/map1.jpg"));
-    foreach (Enemy* enemy, get_enemy_list()) {
-        enemy->setParent(this);
-        enemy->draw(&painter);
-        enemy->march();
-    }
-}*/
-void Map1::updateMap1(){
-    QPainter painter;
-    painter.begin(this);
-    foreach (Enemy* enemy, get_enemy_list()) {
-        //enemy->draw(&painter);
-    }
-    update();
+Map1::~Map1(){
+
 }
+
 //添加防御塔位置
 void Map1::addPlaces(){
     Place *b1 = new Place(this);

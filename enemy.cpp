@@ -1,6 +1,6 @@
 #include "enemy.h"
 #include "ui_object.h"
-#include "collision.h"
+#include "public.h"
 #include <QDebug>
 
 //航点类
@@ -37,6 +37,12 @@ Enemy::Enemy(Object *parent) : Object(parent)
     pixmap= QPixmap(":/images/images/enemy/兔1.png");
     //this->setStyleSheet(tr("border-image: url(:/images/images/elf/rock1.png);"));
 }
+Enemy::~Enemy(){
+
+}
+void Enemy::setdes(WayPoint *des){
+    destination = des;
+}
 void Enemy::draw(QPainter *painter){
     // 血条的长度
     // 其实就是2个方框,红色方框表示总生命,固定大小不变
@@ -52,7 +58,7 @@ void Enemy::draw(QPainter *painter){
     QRect healthBarBackRect(healthBarPoint, QSize(Health_Bar_Width, 2));
     painter->drawRect(healthBarBackRect);
     painter->setBrush(Qt::green);
-    QRect healthBarRect(healthBarPoint, QSize((double)get_now_blood() / get_max_blood() * Health_Bar_Width, 2));
+    QRect healthBarRect(healthBarPoint, QSize((double)get_current_blood() / get_max_blood() * Health_Bar_Width, 2));
     painter->drawRect(healthBarRect);
     // 绘制偏转坐标,由中心+偏移=左上
     //static const QPoint offsetPoint(-width() / 2, -height() / 2);

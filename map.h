@@ -6,11 +6,11 @@
 #include <QPainter>
 #include <QTimer>
 #include "place.h"
+#include "elf.h"
 #include "enemy.h"
 #include "bullet.h"
-class Enemy;
-class WayPoint;
-class Bullet;
+#include "public.h"
+
 namespace Ui {
 class Map1;
 class Result;
@@ -33,9 +33,9 @@ public:
     void removedBullet(Bullet* bullet);
     bool loadWave(int*);
     void paintEvent(QPaintEvent *event);
-    //QPainter* get_painter();
-    QList<Enemy*> get_enemy_list();
+    //QList<Enemy*> get_enemy_list();
     void set_map(QPixmap p){map = p;}
+    void attack(Object *attacker,Object *target);
 signals:
 
 public slots:
@@ -47,11 +47,12 @@ private:
     int round_total;//总轮数
     int round_now = 0;  //目前轮数
     QList<WayPoint*> waypoint_list;
+    QList<Elf*> elf_list;
     QList<Enemy*> enemy_list;
     QList<Place*> place_list;
+    QList<Bullet*> bullet_list;
     bool game_win;
     QPixmap map;
-    //QPainter painter;
 };
 class Result : public QWidget
 {
@@ -69,18 +70,12 @@ class Map1 : public Map
 public:
     explicit Map1(Map *parent = nullptr);
     ~Map1();
-    //void paintEvent(QPaintEvent *);
     void addPlaces();
     void addWayPoints();
-    void updateMap1();
 private slots:
-
     void on_backsub_clicked();
-
     void on_b_1_clicked();
-
     void on_start_clicked();
-
 signals:
     void Backsub();
 private:

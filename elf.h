@@ -48,7 +48,7 @@ signals:
 
 public slots:
 private:
-    Bullet bullets;
+    //Bullet bullets;
 };
 
 #endif // ELF_H

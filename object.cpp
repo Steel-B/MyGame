@@ -6,9 +6,9 @@ Object::Object(QPushButton *parent) ://创建对象,设置血量，获得位置
     center_pos(x()+width()/2,y()+height()*3/4),
     attack_range(0)
 {
+    attack_ablt = true;
 }
 Object::~Object(){
-    //delete ui_ob;
 }
 //设置满血量
 void Object::set_max_blood(int max){
@@ -16,19 +16,24 @@ void Object::set_max_blood(int max){
     this->current_blood = max;
 }
 //设置当前血量
-void Object::set_now_blood(int n){
+void Object::set_current_blood(int n){
     this->current_blood = n;
 }
 //获取当前血量
-int Object::get_now_blood(){
+int Object::get_current_blood(){
     return this->current_blood;
 }
 int Object::get_max_blood(){
     return this->current_blood;
 }
 //设置攻击范围
-void Object::set_range(int rg){
-    this->attack_range = rg;
+void Object::set_range(int r){
+    attack_range = r;
+}
+
+//获取攻击范围
+int Object::get_range(){
+    return attack_range;
 }
 
 //绘制血条
@@ -56,7 +61,19 @@ void Object::drawblood(QPainter *painter){
 //对象受到伤害
 void Object::getDamage(int damage){
     current_blood-=damage;
-    if(current_blood<=0){
-        this->~Object();
-    }
+}
+void Object::change_attack_ablt(){
+    attack_ablt = !attack_ablt;
+}
+bool Object::get_attack_ablt(){
+    return attack_ablt;
+}
+void Object::set_CD_time(int t){
+    CD_time = t;
+}
+void Object::cooldown(){
+    QTimer *timer = new QTimer(this);
+    timer->setSingleShot(true);
+    connect(timer,SIGNAL(timeout()),this,SLOT(change_attack_ablt()));
+    timer->start(CD_time);
 }

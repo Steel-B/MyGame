@@ -42,8 +42,8 @@ HEADERS += \
     object.h \
     elf.h \
     enemy.h \
-    collision.h \
-    bullet.h
+    bullet.h \
+    public.h
 
 FORMS += \
     map1.ui \

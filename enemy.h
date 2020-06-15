@@ -6,7 +6,6 @@
 #include <qmath.h>
 #include <QPixmap>
 #include "object.h"
-#include "map.h"
 
 class WayPoint
 {
@@ -15,7 +14,7 @@ public:
     void setNext(WayPoint *next);
     WayPoint* next()const;
     const QPoint pos()const;
-    void operator=(const WayPoint* w);
+    void operator =(const WayPoint* w);
 private:
     QPoint m_pos;
     WayPoint * m_next;
@@ -24,10 +23,10 @@ private:
 class Enemy : public Object
 {
     Q_OBJECT
-    //Q_PROPERTY(QPoint currentPos READ currentPos WRITE setCurrentPos NOTIFY currentPosChanged)
 public:
     explicit Enemy(Object *parent = nullptr);
-    void setdes(WayPoint *des){destination = des;}
+    ~Enemy();
+    void setdes(WayPoint *des);
     void march();
     void draw(QPainter *painter);
     QPoint currentPos();
