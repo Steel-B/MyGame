@@ -15,8 +15,21 @@ Map::Map(QWidget *parent) : QWidget(parent)
     QTimer *timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(updateMap()));
     timer->start(60);
+    foreach (Elf *elf, elf_list) {
+        elf->show();
+    }
 }
 Map::~Map(){
+    qDeleteAll(waypoint_list);
+    waypoint_list.clear();
+    qDeleteAll(elf_list);
+    elf_list.clear();
+    qDeleteAll(enemy_list);
+    enemy_list.clear();
+    qDeleteAll(place_list);
+    place_list.clear();
+    qDeleteAll(bullet_list);
+    bullet_list.clear();
 }
 void Map::set_round_total(int n){
     this->round_total = n;
@@ -37,6 +50,11 @@ void Map::paintEvent(QPaintEvent *event){
         //qDebug()<<"the "<<i<<" bullet was drawed";
         //qDebug()<<"this bullet's current position is"<<bullet->current_pos();
     }
+    foreach (Elf *elf, elf_list) {
+        elf->draw(&Pixpainter);
+        //qDebug()<<"the "<<i<<" elf was drawed";
+        //qDebug()<<"this elf's position is ("<<elf->x()<<","<<elf->y()<<")";
+    }
     QPainter painter(this);
     painter.drawPixmap(0,0,Pix);
 }
@@ -45,26 +63,32 @@ void Map::updateMap()
 {
     int i=0;
     foreach (Elf *elf, elf_list) {
+        int i = 0;
         foreach (Enemy *enemy, enemy_list){
             //如果敌人进入攻击范围
-            //qDebug()<<"one enemy was checked";
+            i++;
+            qDebug()<<i<<" enemy was checked";
             if(distance(elf->get_current_pos(),enemy->get_current_pos())<=elf->get_range()){
                 attack(elf,enemy);
-                //qDebug()<<"one enemy was aimed";
+                qDebug()<<i<<" enemy was aimed";
             }
         }
     }
     foreach (Enemy *enemy, enemy_list){
+        //qDebug()<<"this enemy's blood is"<<enemy->get_current_blood();
+        if(enemy->get_current_blood()<=0){
+            removedEnemy(enemy);
+            continue;
+        }
         enemy->march();
         //qDebug()<<"the "<<i<<" enemy marched";
         //qDebug()<<"current position is"<<enemy->currentPos();
-        if(enemy->get_current_blood()<=0)removedEnemy(enemy);
     }
     foreach (Bullet *bullet,bullet_list){
         i++;
-        qDebug()<<"the "<<i<<" bullet should move";
+        //qDebug()<<"the "<<i<<" bullet should move";
         bullet->move();
-        qDebug()<<"the "<<i<<" bullet moved";
+        //qDebug()<<"the "<<i<<" bullet moved";
         //如果子弹已击中，移去
         if(bullet->get_state()){
             removedBullet(bullet);
@@ -74,9 +98,9 @@ void Map::updateMap()
             removedBullet(bullet);
         }
         //如果子弹超过射程，移去
-        qDebug()<<"the distance between bullet and cast_object is"<<distance(bullet->current_pos(),bullet->start_pos());
-        qDebug()<<"the bullet's position is "<<bullet->current_pos();
-        qDebug()<<"the bullet's start point is "<<bullet->start_pos();
+        //qDebug()<<"the distance between bullet and cast_object is"<<distance(bullet->current_pos(),bullet->start_pos());
+        //qDebug()<<"the bullet's position is "<<bullet->current_pos();
+        //qDebug()<<"the bullet's start point is "<<bullet->start_pos();
         if(distance(bullet->current_pos(),bullet->start_pos())>=bullet->get_cast_object()->get_range()){
             removedBullet(bullet);
         }
@@ -122,18 +146,41 @@ void Map::removedBullet(Bullet* bullet){
     bullet_list.removeOne(bullet);
     delete bullet;
 }
-//创建小石头
+//创建石头怪
 void Map::build_rock(int x,int y){
     Rock* rock;
     rock = new Rock;
-    rock->set_current_pos(QPoint(x,y));
+    rock->set_current_pos(QPoint(x+10,y+20));
+    rock->move(QPoint(x,y));
     elf_list.push_back(rock);
-    rock->resize(80,80);
     rock->setParent(this);
     rock->getopt()->setParent(this);
     rock->getopt()->move(x-90,y-100);
     rock->show();
-    rock->move(x,y);
+}
+//创建紫月兽
+void Map::build_ice(int x,int y){
+    Ice* ice;
+    ice = new Ice;
+    ice->set_current_pos(QPoint(x+10,y+20));
+    ice->move(QPoint(x,y));
+    elf_list.push_back(ice);
+    ice->setParent(this);
+    ice->getopt()->setParent(this);
+    ice->getopt()->move(x-90,y-100);
+    ice->show();
+}
+//创建沃特种子
+void Map::build_grass(int x,int y){
+    Grass* grass;
+    grass = new Grass;
+    grass->set_current_pos(QPoint(x+5,y+5));
+    grass->move(QPoint(x-5,y-10));
+    elf_list.push_back(grass);
+    grass->setParent(this);
+    grass->getopt()->setParent(this);
+    grass->getopt()->move(x-90,y-100);
+    grass->show();
 }
 bool Map::loadWave(int *enemyStartInterval){
     //最后波结束
@@ -142,7 +189,7 @@ bool Map::loadWave(int *enemyStartInterval){
     //每波6个敌人
     for(int i=0;i<6;i++){
         Enemy *enemy = new Enemy;
-        //enemy->setParent(this);
+        enemy->setParent(this);
         //移至第一航点
         enemy->set_current_pos(waypoint_list[0]->pos());
         //设置第二行点为目标点
@@ -152,9 +199,7 @@ bool Map::loadWave(int *enemyStartInterval){
     }
     return true;
 }
-/*QList<Enemy*> Map::get_enemy_list(){
-    return enemy_list;
-}*/
+
 void Map::attack(Object *attacker,Object *target){
     //如果在冷却中
     if(!attacker->get_attack_ablt())return;
@@ -162,6 +207,9 @@ void Map::attack(Object *attacker,Object *target){
     Bullet *bullet = new Bullet;
     qDebug()<<"one bullet was cast";
     bullet->setParent(this);
+    //如果攻击者有冰属性，则子弹有冰属性
+    if(attacker->get_ice())bullet->set_ice();
+    bullet->set_damage(attacker->get_damage());
     bullet->set_cast_object(attacker);
     bullet->set_pixmap(attacker->get_bullet_pix());
     bullet->set_current(attacker->get_current_pos());
@@ -170,7 +218,6 @@ void Map::attack(Object *attacker,Object *target){
     //攻击者冷却
     attacker->change_attack_ablt();
     attacker->cooldown();
-
 }
 
 //结果界面
@@ -191,6 +238,8 @@ Map1::Map1(Map *parent) :
     ui(new Ui::Map1)
 {
     ui->setupUi(this);
+    ui->backsub->setCursor(QCursor(Qt::PointingHandCursor));
+    ui->start->setCursor(QCursor(Qt::PointingHandCursor));
     //载入地图
     set_map(QPixmap("images/maps/map1.jpg"));
     set_round_total(5);//总波数为5
@@ -203,20 +252,22 @@ Map1::~Map1(){
 
 //添加防御塔位置
 void Map1::addPlaces(){
-    Place *b1 = new Place(this);
-    b1->move(400,60);
-    place_list.push_back(b1);
     Place *b2 = new Place(this);
-    b2->move(610,40);
+    b2->move(625,65);
     place_list.push_back(b2);
     Place *b3 = new Place(this);
-    b3->move(310,230);
+    b3->move(325,250);
     place_list.push_back(b3);
+    Place *b1 = new Place(this);
+    b1->move(415,85);
+    place_list.push_back(b1);
     Place *b4 = new Place(this);
-    b4->move(520,370);
+    b4->move(535,395);
     place_list.push_back(b4);
     for(int i=0;i<4;i++){
         connect(place_list[i],SIGNAL(build_rock(int,int)),this,SLOT(build_rock(int,int)));
+        connect(place_list[i],SIGNAL(build_ice(int,int)),this,SLOT(build_ice(int,int)));
+        connect(place_list[i],SIGNAL(build_grass(int,int)),this,SLOT(build_grass(int,int)));
     }
 }
 void Map1::addWayPoints(){
@@ -267,7 +318,7 @@ void Map1::addWayPoints(){
 void Map1::on_backsub_clicked()
 {
     emit Backsub();
-    this->hide();
+    qDebug()<<"signal was emited";
 }
 //点击位置一
 void Map1::on_b_1_clicked()

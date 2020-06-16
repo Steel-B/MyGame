@@ -15,14 +15,13 @@ class SubWidget : public QWidget
 public:
     explicit SubWidget(QWidget *parent = nullptr);
     ~SubWidget();
-    void dealBacksub();
 signals:
     void Backmenu();
     void to_map1();
     void to_map2();
     void to_map3();
 public slots:
-
+    void dealBacksub();
 private slots:
     void on_back_clicked();
 
@@ -34,7 +33,7 @@ private:
     QPushButton b2;
     QPushButton b3;
     QPushButton back;
-    Map1 map1;
+    Map1 *map1;
     Map map2;
     Map map3;
 };

@@ -59,5 +59,6 @@
         <file>images/maps/退出游戏.png</file>
         <file>images/maps/重新开始.png</file>
         <file>images/elf/bullet/ice.png</file>
+        <file>images/enemy/兔1 - 减速.png</file>
     </qresource>
 </RCC>

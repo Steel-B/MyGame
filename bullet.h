@@ -24,7 +24,10 @@ public:
     QPoint target_pos();
     void hitTarget();
     bool get_state();
-    //void hitTarget_T();
+    void set_speed_damage(int);
+    void set_ice();
+    bool get_ice();
+    void set_damage(int);
 private:
     QPoint start_point;//开始位置
     Object* cast_object;//发射对象
@@ -32,9 +35,11 @@ private:
     QPoint target_point;//目标位置
     QPoint current_point;//当前位置
     int damage;
+    int speed_damage;
     int speed;
     QPixmap pixmap;
     bool hit_state;
+    bool ice;
 };
 
 #endif // BULLET_H

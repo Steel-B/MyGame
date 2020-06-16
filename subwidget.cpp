@@ -9,8 +9,6 @@ SubWidget::SubWidget(QWidget *parent) :
     ui->setupUi(this);
     //关卡选择页面点击返回
     connect(&back,&QPushButton::clicked,this,&SubWidget::on_back_clicked);
-    //关卡页面点击返回
-    connect(&map1,&Map1::Backsub,this,&SubWidget::dealBacksub);
     ui->b1->setCursor(QCursor(Qt::PointingHandCursor));
     ui->b2->setCursor(QCursor(Qt::PointingHandCursor));
     ui->b3->setCursor(QCursor(Qt::PointingHandCursor));
@@ -26,13 +24,15 @@ void SubWidget::on_back_clicked()
 //进入关卡一
 void SubWidget::on_b1_clicked()
 {
+    map1 = new Map1;
     emit to_map1();
-    map1.setParent(parentWidget());
-    map1.show();
-    this->hide();
+    map1->setParent(parentWidget());
+    map1->show();
+    //关卡页面点击返回
+    connect(map1,&Map1::Backsub,this,&SubWidget::dealBacksub);
 }
 //退出游戏返回关卡选择页面
 void SubWidget::dealBacksub(){
-    this->show();
-
+    qDebug()<<"signal was dealed";
+    delete map1;
 }

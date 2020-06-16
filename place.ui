@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>243</width>
-    <height>259</height>
+    <width>221</width>
+    <height>221</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>20</y>
-     <width>231</width>
-     <height>224</height>
+     <y>10</y>
+     <width>201</width>
+     <height>201</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -65,7 +65,7 @@
      <widget class="QPushButton" name="ice">
       <property name="minimumSize">
        <size>
-        <width>78</width>
+        <width>75</width>
         <height>84</height>
        </size>
       </property>
@@ -135,7 +135,7 @@
      <widget class="QPushButton" name="rock">
       <property name="minimumSize">
        <size>
-        <width>78</width>
+        <width>75</width>
         <height>84</height>
        </size>
       </property>
@@ -174,8 +174,8 @@
   <widget class="QPushButton" name="button">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>90</y>
+     <x>70</x>
+     <y>60</y>
      <width>95</width>
      <height>90</height>
     </rect>

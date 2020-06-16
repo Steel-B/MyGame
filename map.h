@@ -33,13 +33,14 @@ public:
     void removedBullet(Bullet* bullet);
     bool loadWave(int*);
     void paintEvent(QPaintEvent *event);
-    //QList<Enemy*> get_enemy_list();
     void set_map(QPixmap p){map = p;}
     void attack(Object *attacker,Object *target);
 signals:
 
 public slots:
     void build_rock(int,int);
+    void build_ice(int,int);
+    void build_grass(int,int);
     void updateMap();
 private:
     int life = 5;       //生命

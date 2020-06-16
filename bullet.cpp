@@ -5,8 +5,10 @@ Bullet::Bullet(QObject *parent):
 {
     //pixmap = QPixmap(":/images/images/elf/bullet/rock(S).png");
     speed = 15;
-    damage = 80;
+    damage = 30;
+    speed_damage = 0;
     hit_state = false;
+    ice = false;
 }
 //绘制子弹
 void Bullet::draw(QPainter*painter){
@@ -16,7 +18,7 @@ void Bullet::draw(QPainter*painter){
 }
 //子弹移动
 void Bullet::move(){
-    qDebug()<<"the target point is "<<"("<<target_point.x()<<","<<target_point.y()<<")";
+    //qDebug()<<"the target point is "<<"("<<target_point.x()<<","<<target_point.y()<<")";
     if(collision(current_point,10,target_point,10)){
         hitTarget();
         hit_state = true;
@@ -57,11 +59,23 @@ QPoint Bullet::target_pos(){
 }
 //子弹击中目标
 void Bullet::hitTarget(){
-    target_object->getDamage(damage);
+    target_object->getDamage(damage,ice);
 }
 bool Bullet::get_state(){
     return hit_state;
 }
 void Bullet::set_pixmap(QPixmap p){
     pixmap = p;
+}
+void Bullet::set_speed_damage(int d){
+    speed_damage = d;
+}
+void Bullet::set_ice(){
+    ice = true;
+}
+bool Bullet::get_ice(){
+    return ice;
+}
+void Bullet::set_damage(int d){
+    damage = d;
 }

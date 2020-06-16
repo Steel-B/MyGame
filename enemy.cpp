@@ -31,10 +31,11 @@ void WayPoint::operator =(const WayPoint* w){
 Enemy::Enemy(Object *parent) : Object(parent)
 {
     set_max_blood(60);
-    move_speed = 5;
+    set_speed(5);
     m_active =false;
     this->resize(80,80);
-    pixmap= QPixmap(":/images/images/enemy/兔1.png");
+    set_pixmap(QPixmap(":/images/images/enemy/兔1.png"));
+    set_freezed_pix(QPixmap(":/images/images/enemy/兔1 - 减速.png"));
 }
 Enemy::~Enemy(){
 
@@ -42,25 +43,7 @@ Enemy::~Enemy(){
 void Enemy::setdes(WayPoint *des){
     destination = des;
 }
-void Enemy::draw(QPainter *painter){
-    // 血条的长度
-    // 其实就是2个方框,红色方框表示总生命,固定大小不变
-    // 绿色方框表示当前生命,受m_currentHp / m_maxHp的变化影响
-    static const int Health_Bar_Width = 20;
-    painter->save();
-    painter->drawPixmap(get_current_pos(),pixmap);
-    //qDebug()<<"the enemy's current position is"<<get_current_pos()<<endl;
-    QPoint healthBarPoint = get_current_pos() + QPoint(15, -height() / 6);
-    // 绘制血条
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(Qt::red);
-    QRect healthBarBackRect(healthBarPoint, QSize(Health_Bar_Width, 2));
-    painter->drawRect(healthBarBackRect);
-    painter->setBrush(Qt::green);
-    QRect healthBarRect(healthBarPoint, QSize((double)get_current_blood() / get_max_blood() * Health_Bar_Width, 2));
-    painter->drawRect(healthBarRect);
-    painter->restore();
-}
+
 void Enemy::march(){
     if(!m_active)return;    //如果敌人不能行动，则返回
     if(collision(this->get_current_pos(),1,this->destination.pos(),1)){
@@ -80,7 +63,7 @@ void Enemy::march(){
     QPoint targetPoint = destination.pos();
     // 未来修改这个可以添加移动状态,加快,减慢,m_walkingSpeed是基准值
     // 向量标准化
-    double movementSpeed = move_speed;
+    double movementSpeed = get_speed();
     QVector2D normalized(targetPoint - get_current_pos());
     normalized.normalize();
     set_current_pos(get_current_pos() + normalized.toPoint() * movementSpeed);

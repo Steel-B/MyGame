@@ -42,7 +42,25 @@ void Place::on_cancel1_clicked()
 //小石怪类
 void Place::on_rock_clicked()
 {
-    emit build_rock(this->x()+90,this->y()+80);
+    emit build_rock(this->x()+75,this->y()+55);
+    ui->rock->hide();
+    ui->ice->hide();
+    ui->grass->hide();
+    ui->cancel1->hide();
+}
+
+void Place::on_ice_clicked()
+{
+    emit build_ice(this->x()+75,this->y()+55);
+    ui->rock->hide();
+    ui->ice->hide();
+    ui->grass->hide();
+    ui->cancel1->hide();
+}
+
+void Place::on_grass_clicked()
+{
+    emit build_grass(this->x()+75,this->y()+55);
     ui->rock->hide();
     ui->ice->hide();
     ui->grass->hide();

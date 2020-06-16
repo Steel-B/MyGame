@@ -28,7 +28,6 @@ public:
     ~Enemy();
     void setdes(WayPoint *des);
     void march();
-    void draw(QPainter *painter);
     QPoint currentPos();
     void setCurrentPos(QPoint);
 signals:
@@ -36,10 +35,8 @@ signals:
 public slots:
     void doActiate();
 private:
-    double move_speed;  //前进速度
     WayPoint destination;//目标点
     int value;  //死亡奖励数
-    QPixmap pixmap;
     bool m_active;
 };
 
