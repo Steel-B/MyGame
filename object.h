@@ -32,6 +32,8 @@ public:
     bool get_attack_ablt();
     void cooldown();
     void set_CD_time(int);
+    void set_bullet_pix(QPixmap);
+    QPixmap get_bullet_pix();
 signals:
 public slots:
     void change_attack_ablt();
@@ -44,6 +46,8 @@ private:
     bool attack_ablt;//能否攻击
     QPoint current_pos;//当前位置
     QPoint center_pos; //当前中心点坐标
+    QPixmap pixmap;//对象图片
+    QPixmap bullet_pix;//子弹图片
 };
 
 #endif // OBJECT_H

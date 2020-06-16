@@ -24,7 +24,7 @@ int Object::get_current_blood(){
     return this->current_blood;
 }
 int Object::get_max_blood(){
-    return this->current_blood;
+    return this->max_blood;
 }
 //设置攻击范围
 void Object::set_range(int r){
@@ -76,4 +76,10 @@ void Object::cooldown(){
     timer->setSingleShot(true);
     connect(timer,SIGNAL(timeout()),this,SLOT(change_attack_ablt()));
     timer->start(CD_time);
+}
+void Object::set_bullet_pix(QPixmap p){
+    bullet_pix = p;
+}
+QPixmap Object::get_bullet_pix(){
+    return bullet_pix;
 }

@@ -31,11 +31,10 @@ void WayPoint::operator =(const WayPoint* w){
 Enemy::Enemy(Object *parent) : Object(parent)
 {
     set_max_blood(60);
-    move_speed = 1;
+    move_speed = 5;
     m_active =false;
     this->resize(80,80);
     pixmap= QPixmap(":/images/images/enemy/兔1.png");
-    //this->setStyleSheet(tr("border-image: url(:/images/images/elf/rock1.png);"));
 }
 Enemy::~Enemy(){
 
@@ -50,7 +49,7 @@ void Enemy::draw(QPainter *painter){
     static const int Health_Bar_Width = 20;
     painter->save();
     painter->drawPixmap(get_current_pos(),pixmap);
-    qDebug()<<"the enemy's current position is"<<get_current_pos()<<endl;
+    //qDebug()<<"the enemy's current position is"<<get_current_pos()<<endl;
     QPoint healthBarPoint = get_current_pos() + QPoint(15, -height() / 6);
     // 绘制血条
     painter->setPen(Qt::NoPen);
@@ -60,15 +59,6 @@ void Enemy::draw(QPainter *painter){
     painter->setBrush(Qt::green);
     QRect healthBarRect(healthBarPoint, QSize((double)get_current_blood() / get_max_blood() * Health_Bar_Width, 2));
     painter->drawRect(healthBarRect);
-    // 绘制偏转坐标,由中心+偏移=左上
-    //static const QPoint offsetPoint(-width() / 2, -height() / 2);
-    //static const QPoint offsetPoint(100, 100);
-
-    //painter->translate(get_current_pos());
-
-    //painter->rotate(m_rotationSprite);
-    // 绘制敌人
-    //painter->drawPixmap(QPoint(0,0), pixmap);
     painter->restore();
 }
 void Enemy::march(){
@@ -94,9 +84,6 @@ void Enemy::march(){
     QVector2D normalized(targetPoint - get_current_pos());
     normalized.normalize();
     set_current_pos(get_current_pos() + normalized.toPoint() * movementSpeed);
-    // 确定敌人选择方向
-    // 默认图片向左,需要修正180度转右
-    //m_rotationSprite = qRadiansToDegrees(qAtan2(normalized.y(), normalized.x())) + 180;
 }
 QPoint Enemy::currentPos(){
     return get_center_pos();

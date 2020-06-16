@@ -3,6 +3,7 @@
 #include <QPoint>
 #include <QVector2D>
 #include <QPainter>
+#include <QDebug>
 #include "object.h"
 #include "public.h"
 
@@ -13,14 +14,20 @@ public:
     explicit Bullet(QObject *parent = nullptr);
     void draw(QPainter*painter);
     void move();
+    void set_cast_object(Object *o);
+    Object* get_cast_object();
     void set_target_object(Object *o);
     void set_current(QPoint pos);
+    void set_pixmap(QPixmap);
     QPoint current_pos();
+    QPoint start_pos();
+    QPoint target_pos();
     void hitTarget();
     bool get_state();
     //void hitTarget_T();
 private:
     QPoint start_point;//开始位置
+    Object* cast_object;//发射对象
     Object* target_object;//目标对象
     QPoint target_point;//目标位置
     QPoint current_point;//当前位置

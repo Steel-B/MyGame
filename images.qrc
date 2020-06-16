@@ -9,12 +9,7 @@
         <file>images/elf/rock1.png</file>
         <file>images/elf/rock2.png</file>
         <file>images/elf/rock3.png</file>
-        <file>images/elf/bullet/aerolite.png</file>
         <file>images/elf/bullet/bubble.png</file>
-        <file>images/elf/bullet/ice cube.png</file>
-        <file>images/elf/bullet/ice piton(L).png</file>
-        <file>images/elf/bullet/ice piton(S).png</file>
-        <file>images/elf/bullet/rock(L).png</file>
         <file>images/elf/bullet/rock(S).png</file>
         <file>images/enemy/丑1.png</file>
         <file>images/enemy/丑2.png</file>
@@ -63,5 +58,6 @@
         <file>images/maps/fail.png</file>
         <file>images/maps/退出游戏.png</file>
         <file>images/maps/重新开始.png</file>
+        <file>images/elf/bullet/ice.png</file>
     </qresource>
 </RCC>

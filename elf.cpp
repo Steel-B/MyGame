@@ -33,6 +33,7 @@ Rock::Rock(Elf *parent):
 {
     set_CD_time(3000);
     set_range(200);
+    set_bullet_pix(QPixmap(":/images/images/elf/bullet/rock(S).png"));
     this->setStyleSheet(tr("border-image: url(:/images/images/elf/rock1.png);"));
 }
 Rock::paintEvent(){

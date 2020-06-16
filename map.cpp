@@ -14,7 +14,7 @@ Map::Map(QWidget *parent) : QWidget(parent)
         connect(enemy_list[i],&Enemy::damage_base,this,&Map::deal_damage);
     QTimer *timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(updateMap()));
-    timer->start(10);
+    timer->start(60);
 }
 Map::~Map(){
 }
@@ -23,66 +23,66 @@ void Map::set_round_total(int n){
 }
 //绘制
 void Map::paintEvent(QPaintEvent *event){
-    QPainter painter(this);
-    painter.drawPixmap(0,0,width(),height(),map);
+    QPixmap Pix = map.scaled(width(),height());
+    QPainter Pixpainter(&Pix);
     int i=0;
     foreach (Enemy* enemy, enemy_list) {
-        enemy->draw(&painter);
+        enemy->draw(&Pixpainter);
         i++;
-        qDebug()<<"the "<<i<<" enemy was drawed"<<endl;
-        qDebug()<<"current position is"<<enemy->currentPos()<<endl;
+        //qDebug()<<"the "<<i<<" enemy was drawed"<<endl;
+        //qDebug()<<"current position is"<<enemy->currentPos()<<endl;
     }
     foreach (Bullet *bullet,bullet_list){
-        bullet->draw(&painter);
-        qDebug()<<"the "<<i<<" bullet was drawed";
-        qDebug()<<"this bullet's current position is"<<bullet->current_pos();
+        bullet->draw(&Pixpainter);
+        //qDebug()<<"the "<<i<<" bullet was drawed";
+        //qDebug()<<"this bullet's current position is"<<bullet->current_pos();
     }
+    QPainter painter(this);
+    painter.drawPixmap(0,0,Pix);
 }
 //更新画面
 void Map::updateMap()
 {
-    char i='0';
+    int i=0;
     foreach (Elf *elf, elf_list) {
         foreach (Enemy *enemy, enemy_list){
             //如果敌人进入攻击范围
-            qDebug()<<"one enemy was checked";
+            //qDebug()<<"one enemy was checked";
             if(distance(elf->get_current_pos(),enemy->get_current_pos())<=elf->get_range()){
                 attack(elf,enemy);
-                qDebug()<<"one enemy was aimed";
+                //qDebug()<<"one enemy was aimed";
             }
         }
     }
     foreach (Enemy *enemy, enemy_list){
         enemy->march();
-        i++;
-        qDebug()<<"the "<<i<<" enemy marched";
-        qDebug()<<"current position is"<<enemy->currentPos();
+        //qDebug()<<"the "<<i<<" enemy marched";
+        //qDebug()<<"current position is"<<enemy->currentPos();
         if(enemy->get_current_blood()<=0)removedEnemy(enemy);
     }
     foreach (Bullet *bullet,bullet_list){
+        i++;
+        qDebug()<<"the "<<i<<" bullet should move";
         bullet->move();
         qDebug()<<"the "<<i<<" bullet moved";
         //如果子弹已击中，移去
         if(bullet->get_state()){
             removedBullet(bullet);
         }
+        //如果目标点超过射程，移去
+        if(distance(bullet->target_pos(),bullet->start_pos())>=bullet->get_cast_object()->get_range()){
+            removedBullet(bullet);
+        }
+        //如果子弹超过射程，移去
+        qDebug()<<"the distance between bullet and cast_object is"<<distance(bullet->current_pos(),bullet->start_pos());
+        qDebug()<<"the bullet's position is "<<bullet->current_pos();
+        qDebug()<<"the bullet's start point is "<<bullet->start_pos();
+        if(distance(bullet->current_pos(),bullet->start_pos())>=bullet->get_cast_object()->get_range()){
+            removedBullet(bullet);
+        }
     }
     update();
 }
-//遍历所有塔与敌人
-/*void Map::updateTarget(){
-    foreach (Elf *elf, elf_list) {
-        foreach (Enemy *enemy, enemy_list){
-            //如果敌人进入攻击范围
-            qDebug()<<"one enemy was checked";
-            if(distance(elf->get_current_pos(),enemy->get_current_pos())<=elf->get_range()){
-                attack(elf,enemy);
-                qDebug()<<"one enemy was aimed";
-            }
-        }
-    }
-}
-*/
 //怪物进入基地
 void Map::deal_damage(){
     life--;
@@ -160,7 +160,10 @@ void Map::attack(Object *attacker,Object *target){
     if(!attacker->get_attack_ablt())return;
     //如果冷却结束
     Bullet *bullet = new Bullet;
+    qDebug()<<"one bullet was cast";
     bullet->setParent(this);
+    bullet->set_cast_object(attacker);
+    bullet->set_pixmap(attacker->get_bullet_pix());
     bullet->set_current(attacker->get_current_pos());
     bullet->set_target_object(target);
     bullet_list.push_back(bullet);
