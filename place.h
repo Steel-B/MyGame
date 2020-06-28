@@ -2,6 +2,8 @@
 #define PLACE_H
 
 #include <QWidget>
+#include <QPushButton>
+#include <QDebug>
 
 namespace Ui {
 class Place;
@@ -15,9 +17,9 @@ public:
     void build();
     ~Place();
 signals:
-    void build_rock(int x,int y);
-    void build_ice(int x,int y);
-    void build_grass(int x,int y);
+    void build_rock(Place*,QPushButton*);
+    void build_ice(Place*,QPushButton*);
+    void build_grass(Place*,QPushButton*);
 public slots:
 
 private slots:

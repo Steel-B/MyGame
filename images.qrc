@@ -11,18 +11,6 @@
         <file>images/elf/rock3.png</file>
         <file>images/elf/bullet/bubble.png</file>
         <file>images/elf/bullet/rock(S).png</file>
-        <file>images/enemy/丑1.png</file>
-        <file>images/enemy/丑2.png</file>
-        <file>images/enemy/龙1.png</file>
-        <file>images/enemy/龙2.png</file>
-        <file>images/enemy/兔1.png</file>
-        <file>images/enemy/兔2.png</file>
-        <file>images/enemy/巫1.png</file>
-        <file>images/enemy/巫2.png</file>
-        <file>images/enemy/无棍巫2.png</file>
-        <file>images/enemy/bullet/红球.png</file>
-        <file>images/enemy/bullet/蓝球.png</file>
-        <file>images/enemy/bullet/木棍2.png</file>
         <file>images/levels/1.png</file>
         <file>images/levels/2.png</file>
         <file>images/levels/3.png</file>
@@ -52,13 +40,27 @@
         <file>images/place point/empt.png</file>
         <file>images/maps/生命.png</file>
         <file>images/maps/终点.png</file>
-        <file>images/enemy/血条1.png</file>
-        <file>images/enemy/血条2.png</file>
         <file>images/maps/win.png</file>
         <file>images/maps/fail.png</file>
         <file>images/maps/退出游戏.png</file>
         <file>images/maps/重新开始.png</file>
         <file>images/elf/bullet/ice.png</file>
-        <file>images/enemy/兔1 - 减速.png</file>
+        <file>images/place point/grass_.png</file>
+        <file>images/place point/ice_.png</file>
+        <file>images/place point/rock_.png</file>
+        <file>images/enemy/dragon.png</file>
+        <file>images/enemy/dragon_ice.png</file>
+        <file>images/enemy/joker.png</file>
+        <file>images/enemy/joker_ice.png</file>
+        <file>images/enemy/rabbit.png</file>
+        <file>images/enemy/rabbit_ice.png</file>
+        <file>images/enemy/witch.png</file>
+        <file>images/enemy/witch_ice.png</file>
+        <file>images/enemy/bullet/ball.png</file>
+        <file>images/enemy/bird.png</file>
+        <file>images/enemy/bird_ice.png</file>
+        <file>images/maps/res1.png</file>
+        <file>images/maps/res2.png</file>
+        <file>images/maps/res3.png</file>
     </qresource>
 </RCC>
