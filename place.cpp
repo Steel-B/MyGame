@@ -42,7 +42,8 @@ void Place::on_cancel1_clicked()
 //小石怪类
 void Place::on_rock_clicked()
 {
-    emit build_rock(this->x()+75,this->y()+55);
+    emit build_rock(this,ui->button);
+    qDebug()<<"the rock should be built";
     ui->rock->hide();
     ui->ice->hide();
     ui->grass->hide();
@@ -51,7 +52,7 @@ void Place::on_rock_clicked()
 
 void Place::on_ice_clicked()
 {
-    emit build_ice(this->x()+75,this->y()+55);
+    emit build_ice(this,ui->button);
     ui->rock->hide();
     ui->ice->hide();
     ui->grass->hide();
@@ -60,7 +61,7 @@ void Place::on_ice_clicked()
 
 void Place::on_grass_clicked()
 {
-    emit build_grass(this->x()+75,this->y()+55);
+    emit build_grass(this,ui->button);
     ui->rock->hide();
     ui->ice->hide();
     ui->grass->hide();

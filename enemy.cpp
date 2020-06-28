@@ -1,5 +1,4 @@
 #include "enemy.h"
-#include "ui_object.h"
 #include "public.h"
 #include <QDebug>
 
@@ -30,20 +29,22 @@ void WayPoint::operator =(const WayPoint* w){
 //敌人类
 Enemy::Enemy(Object *parent) : Object(parent)
 {
-    set_max_blood(60);
-    set_speed(5);
-    m_active =false;
-    this->resize(80,80);
-    set_pixmap(QPixmap(":/images/images/enemy/兔1.png"));
-    set_freezed_pix(QPixmap(":/images/images/enemy/兔1 - 减速.png"));
+    m_active =false;        //初始运动状态
+    resize(80,80);          //图片大小
+    player = new QMediaPlayer;
+    qDebug()<<"hand show";
+    this->setCursor(QCursor(Qt::PointingHandCursor));
+    connect(this,&Enemy::clicked,this,&Enemy::player_damage);
+    //connect(this,&Enemy::clicked,this,&Enemy::player_damage);
 }
 Enemy::~Enemy(){
-
+    delete player;
 }
 void Enemy::setdes(WayPoint *des){
     destination = des;
 }
 
+//敌人移动
 void Enemy::march(){
     if(!m_active)return;    //如果敌人不能行动，则返回
     if(collision(this->get_current_pos(),1,this->destination.pos(),1)){
@@ -54,35 +55,66 @@ void Enemy::march(){
             destination = destination.next();
         }
         else{//敌人进入基地
-            emit damage_base();
+            emit damage_base(this);
             return;
         }
     }
     // 还在前往航点的路上
     // 目标航点的坐标
     QPoint targetPoint = destination.pos();
-    // 未来修改这个可以添加移动状态,加快,减慢,m_walkingSpeed是基准值
     // 向量标准化
     double movementSpeed = get_speed();
     QVector2D normalized(targetPoint - get_current_pos());
     normalized.normalize();
     set_current_pos(get_current_pos() + normalized.toPoint() * movementSpeed);
 }
-QPoint Enemy::currentPos(){
-    return get_center_pos();
-}
-void Enemy::setCurrentPos(QPoint p){
-    set_center_pos(p);
-}
+
 void Enemy::doActiate(){
-    m_active =true;
+    m_active =!m_active;
+}
+void Enemy::player_damage(){
+
+    player->setMedia(QUrl("qrc:/sound/sound/bullet/hurt.mp3"));
+    player->setVolume(30);
+    player->play();
+    getDamage(300,false);
 }
 Enemy1::Enemy1(Enemy *parent) : Enemy(parent)
 {
-    set_max_blood(30);
+    set_max_blood(60);      //血量
+    set_speed(3);           //前进速度
+    set_value(10);          //死亡金币
+    change_attack_ablt();   //不能攻击
+    set_pixmap(QPixmap(":/images/images/enemy/rabbit.png"));                //图片
+    set_freezed_pix(QPixmap(":/images/images/enemy/rabbit_ice.png"));     //减速图片
+    qDebug()<<"structing enemy1";
 }
 Enemy2::Enemy2(Enemy *parent) : Enemy(parent)
 {
-    set_max_blood(20);
+    set_max_blood(60);      //血量
+    set_speed(3);           //前进速度
+    set_value(20);          //死亡金币
+    change_attack_ablt();   //不能攻击
+    set_pixmap(QPixmap(":/images/images/enemy/bird.png"));                //图片
+    set_freezed_pix(QPixmap(":/images/images/enemy/bird_ice.png"));     //减速图片
+}
+Enemy3::Enemy3(Enemy *parent) : Enemy(parent)
+{
+    set_max_blood(80);      //血量
+    set_speed(3);           //前进速度
+    set_value(30);          //死亡金币
     set_range(100);
+    set_CD_time(800);
+    set_damage(10);
+    set_bullet_pix(QPixmap(":/images/images/enemy/bullet/ball.png"));
+    set_pixmap(QPixmap(":/images/images/enemy/joker.png"));                //图片
+    set_freezed_pix(QPixmap(":/images/images/enemy/joker_ice.png"));     //减速图片
+}
+Enemy4::Enemy4(Enemy *parent) : Enemy(parent)
+{
+    set_max_blood(200);      //血量
+    set_speed(2);           //前进速度
+    set_value(50);          //死亡金币
+    set_pixmap(QPixmap(":/images/images/enemy/dragon.png"));                //图片
+    set_freezed_pix(QPixmap(":/images/images/enemy/dragon_ice.png"));     //减速图片
 }

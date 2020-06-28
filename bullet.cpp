@@ -3,10 +3,8 @@
 Bullet::Bullet(QObject *parent):
     QObject(parent)
 {
-    //pixmap = QPixmap(":/images/images/elf/bullet/rock(S).png");
-    speed = 15;
+    speed = 30;
     damage = 30;
-    speed_damage = 0;
     hit_state = false;
     ice = false;
 }
@@ -18,64 +16,23 @@ void Bullet::draw(QPainter*painter){
 }
 //子弹移动
 void Bullet::move(){
-    //qDebug()<<"the target point is "<<"("<<target_point.x()<<","<<target_point.y()<<")";
-    if(collision(current_point,10,target_point,10)){
-        hitTarget();
-        hit_state = true;
-        return;
+    if(cast_object){
+        if(collision(current_point,10,target_point,10)){
+            hit_state = true;
+            return;
+        }
+        target_point = target_object->get_current_pos();
+        QVector2D normalized(target_point - current_point);
+        normalized.normalize();
+        current_point = current_point + normalized.toPoint() * speed;
     }
-    target_point = target_object->get_current_pos();
-    QVector2D normalized(target_point - current_point);
-    normalized.normalize();
-    current_point = current_point + normalized.toPoint() * speed;
 }
 //设置发射对象
 void Bullet::set_cast_object(Object *o){
     cast_object = o;
     start_point = cast_object->get_current_pos();
 }
-//获取发射对象
-Object* Bullet::get_cast_object(){
-    return cast_object;
-}
-//设置目标对象
-void Bullet::set_target_object(Object *o){
-    target_object = o;
-}
-//设置子弹当前位置
-void Bullet::set_current(QPoint pos){
-    current_point = pos;
-}
-//返回子弹当前位置
-QPoint Bullet::current_pos(){
-    return current_point;
-}
-//返回子弹初始位置
-QPoint Bullet::start_pos(){
-    return start_point;
-}
-QPoint Bullet::target_pos(){
-    return target_point;
-}
 //子弹击中目标
 void Bullet::hitTarget(){
     target_object->getDamage(damage,ice);
-}
-bool Bullet::get_state(){
-    return hit_state;
-}
-void Bullet::set_pixmap(QPixmap p){
-    pixmap = p;
-}
-void Bullet::set_speed_damage(int d){
-    speed_damage = d;
-}
-void Bullet::set_ice(){
-    ice = true;
-}
-bool Bullet::get_ice(){
-    return ice;
-}
-void Bullet::set_damage(int d){
-    damage = d;
 }

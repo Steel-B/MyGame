@@ -2,13 +2,12 @@
     <qresource prefix="/sound">
         <file>sound/click.mp3</file>
         <file>sound/money.mp3</file>
-        <file>sound/bullet/fireball.mp3</file>
         <file>sound/bullet/ice_broken.mp3</file>
-        <file>sound/bullet/pop.mp3</file>
         <file>sound/bullet/shoot.mp3</file>
         <file>sound/BGM/StudioEIM - 神木村 LeafreInMirror.mp3</file>
         <file>sound/BGM/StudioEIM - 神木村龙林音乐.mp3</file>
         <file>sound/BGM/StudioEIM - 神木村生命的洞窟.mp3</file>
         <file>sound/BGM/StudioEIM - 鱼王 boss.mp3</file>
+        <file>sound/bullet/hurt.mp3</file>
     </qresource>
 </RCC>

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPainter>
 #include <QPushButton>
+#include <QMediaPlayer>
 #include "map.h"
 
 namespace Ui {
@@ -21,11 +22,15 @@ signals:
     void to_map2();
     void to_map3();
 public slots:
-    void dealBacksub();
+    void dealBacksub(Map*);
 private slots:
     void on_back_clicked();
 
     void on_b1_clicked();
+
+    void on_b2_clicked();
+
+    void on_b3_clicked();
 
 private:
     Ui::SubWidget *ui;
@@ -34,8 +39,8 @@ private:
     QPushButton b3;
     QPushButton back;
     Map1 *map1;
-    Map map2;
-    Map map3;
+    Map2 *map2;
+    Map3 *map3;
 };
 
 #endif // SUBWIDGET_H

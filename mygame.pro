@@ -5,7 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT       += multimedia
+CONFIG += resources_big
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = mygame
@@ -46,16 +47,17 @@ HEADERS += \
     public.h
 
 FORMS += \
-    map1.ui \
     place.ui \
     subwidget.ui \
     mainwidget.ui \
     option.ui \
     result.ui \
-    result.ui
+    result.ui \
+    map.ui
 
 RESOURCES += \
-    images.qrc
+    images.qrc \
+    sound.qrc
 
 DISTFILES += \
     images/place point/cancel.png \
@@ -64,5 +66,20 @@ DISTFILES += \
     images/place point/rock.png \
     images/place point/sell.png \
     images/place point/up1.png \
-    images/place point/up2.png
+    images/place point/up2.png \
+    sound/BGM/StudioEIM - 神木村 LeafreInMirror.mp3 \
+    sound/BGM/StudioEIM - Elfwood.mp3 \
+    sound/BGM/StudioEIM - 神木村 LeafreInMirror.mp3 \
+    sound/BGM/StudioEIM - 神木村龙林音乐.mp3 \
+    sound/BGM/StudioEIM - 神木村生命的洞窟.mp3 \
+    sound/BGM/StudioEIM - 时间神殿.mp3 \
+    sound/BGM/StudioEIM - 鱼王 boss.mp3 \
+    BGM/StudioEIM - 神木村 LeafreInMirror.mp3 \
+    BGM/StudioEIM - 神木村 LeafreInMirror.mp3 \
+    sound/BGM/StudioEIM - Elfwood.mp3 \
+    sound/BGM/StudioEIM - 神木村 LeafreInMirror.mp3 \
+    sound/BGM/StudioEIM - 神木村龙林音乐.mp3 \
+    sound/BGM/StudioEIM - 神木村生命的洞窟.mp3 \
+    sound/BGM/StudioEIM - 时间神殿.mp3 \
+    sound/BGM/StudioEIM - 鱼王 boss.mp3
 
