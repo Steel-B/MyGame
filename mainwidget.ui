@@ -170,22 +170,6 @@
  <resources/>
  <connections>
   <connection>
-   <sender>Exit</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWidget</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>601</x>
-     <y>532</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>599</x>
-     <y>374</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>Begin</sender>
    <signal>clicked()</signal>
    <receiver>Begin</receiver>
