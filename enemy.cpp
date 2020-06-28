@@ -6,20 +6,8 @@
 WayPoint::WayPoint(QPoint pos):
     m_pos(pos),
     m_next(NULL)
-{
-}
-//设置下一航点
-void WayPoint::setNext(WayPoint *next){
-    m_next = next;
-}
-//获取下一行点
-WayPoint* WayPoint::next()const{
-    return m_next;
-}
-//获取当前航点
-const QPoint WayPoint::pos()const{
-    return m_pos;
-}
+{}
+
 //重载WayPoint =
 void WayPoint::operator =(const WayPoint* w){
     this->m_pos = w->m_pos;
@@ -32,16 +20,12 @@ Enemy::Enemy(Object *parent) : Object(parent)
     m_active =false;        //初始运动状态
     resize(80,80);          //图片大小
     player = new QMediaPlayer;
-    qDebug()<<"hand show";
     this->setCursor(QCursor(Qt::PointingHandCursor));
+    //关联玩家伤害
     connect(this,&Enemy::clicked,this,&Enemy::player_damage);
-    //connect(this,&Enemy::clicked,this,&Enemy::player_damage);
 }
 Enemy::~Enemy(){
     delete player;
-}
-void Enemy::setdes(WayPoint *des){
-    destination = des;
 }
 
 //敌人移动
@@ -68,10 +52,7 @@ void Enemy::march(){
     normalized.normalize();
     set_current_pos(get_current_pos() + normalized.toPoint() * movementSpeed);
 }
-
-void Enemy::doActiate(){
-    m_active =!m_active;
-}
+//收到玩家伤害
 void Enemy::player_damage(){
 
     player->setMedia(QUrl("qrc:/sound/sound/bullet/hurt.mp3"));

@@ -43,7 +43,6 @@ void Place::on_cancel1_clicked()
 void Place::on_rock_clicked()
 {
     emit build_rock(this,ui->button);
-    qDebug()<<"the rock should be built";
     ui->rock->hide();
     ui->ice->hide();
     ui->grass->hide();

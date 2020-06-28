@@ -8,14 +8,12 @@ SubWidget::SubWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     //关卡选择页面点击返回
-    connect(&back,&QPushButton::clicked,this,&SubWidget::on_back_clicked);
     ui->b1->setCursor(QCursor(Qt::PointingHandCursor));
     ui->b2->setCursor(QCursor(Qt::PointingHandCursor));
     ui->b3->setCursor(QCursor(Qt::PointingHandCursor));
     ui->back->setCursor(QCursor(Qt::PointingHandCursor));
 }
-SubWidget::~SubWidget(){
-}
+SubWidget::~SubWidget(){}
 //返回主菜单
 void SubWidget::on_back_clicked()
 {
@@ -34,12 +32,12 @@ void SubWidget::on_b1_clicked()
     player->setVolume(30);
     player->play();
 
-    map1 = new Map1;
-    emit to_map1();
-    map1->setParent(parentWidget());
-    map1->show();
+    map = new Map1;
+    emit to_map();
+    map->setParent(parentWidget());
+    map->show();
     //关卡页面点击返回
-    connect(map1,&Map::Backsub,this,&SubWidget::dealBacksub);
+    connect(map,&Map::Backsub,this,&SubWidget::dealBacksub);
 }
 //进入关卡2
 void SubWidget::on_b2_clicked()
@@ -49,12 +47,12 @@ void SubWidget::on_b2_clicked()
     player->setVolume(30);
     player->play();
 
-    map2 = new Map2;
-    emit to_map1();
-    map2->setParent(parentWidget());
-    map2->show();
+    map = new Map2;
+    emit to_map();
+    map->setParent(parentWidget());
+    map->show();
     //关卡页面点击返回
-    connect(map2,&Map::Backsub,this,&SubWidget::dealBacksub);
+    connect(map,&Map::Backsub,this,&SubWidget::dealBacksub);
 }
 //进入关卡3
 void SubWidget::on_b3_clicked()
@@ -64,12 +62,12 @@ void SubWidget::on_b3_clicked()
     player->setVolume(30);
     player->play();
 
-    map3 = new Map3;
-    emit to_map1();
-    map3->setParent(parentWidget());
-    map3->show();
+    map = new Map3;
+    emit to_map();
+    map->setParent(parentWidget());
+    map->show();
     //关卡页面点击返回
-    connect(map3,&Map::Backsub,this,&SubWidget::dealBacksub);
+    connect(map,&Map::Backsub,this,&SubWidget::dealBacksub);
 }
 //退出游戏返回关卡选择页面
 void SubWidget::dealBacksub(Map* map){

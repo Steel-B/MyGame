@@ -9,7 +9,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->setupUi(this);
     //返回主菜单
     connect(&Subw,&SubWidget::Backmenu,this,&MainWidget::dealBack);
-    connect(&Subw,&SubWidget::to_map1,this,&MainWidget::dealmap1);
+    connect(&Subw,&SubWidget::to_map,this,&MainWidget::dealmap);
     ui->Begin->setCursor(QCursor(Qt::PointingHandCursor));
     ui->Exit->setCursor(QCursor(Qt::PointingHandCursor));
 
@@ -56,7 +56,7 @@ void MainWidget::dealBack(){
     player->play();
 }
 
-void MainWidget::dealmap1(){
+void MainWidget::dealmap(){
     qDebug()<<"music should stop";
     playlist->clear();
 }

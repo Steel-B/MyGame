@@ -16,7 +16,8 @@ void Bullet::draw(QPainter*painter){
 }
 //子弹移动
 void Bullet::move(){
-    if(cast_object){
+    if(cast_object){//如果发射对象存在
+        //击中目标对象
         if(collision(current_point,10,target_point,10)){
             hit_state = true;
             return;

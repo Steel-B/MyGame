@@ -9,15 +9,13 @@ Object::Object(QPushButton *parent) ://创建对象,设置血量，获得位置
     ice = false;
     freeze = false;
     this->setCursor(QCursor(Qt::PointingHandCursor));
-    //qDebug()<<"one object is set";
-    //timer3 = new QTimer(this);
 }
 Object::~Object(){
 }
 //设置满血量
 void Object::set_max_blood(int max){
-    this->max_blood = max;
-    this->current_blood = max;
+    max_blood = max;
+    current_blood = max;
 }
 
 //对象受到伤害
@@ -25,31 +23,24 @@ void Object::getDamage(int damage,bool ice){
     current_blood-=damage;
     //如果子弹有减速属性,且该对象没有被冰冻
     if(ice&&!freeze){
-        qDebug()<<"this object was freezed";
         change_state();
         freezed();
     }
 }
 //对象攻击冷却
 void Object::cooldown(){
-    qDebug()<<"cooldown was called";
     QTimer::singleShot(CD_time,this,SLOT(change_attack_ablt()));
 }
 
 void Object::draw(QPainter *painter,bool map3){
-    // 血条的长度
-    // 其实就是2个方框,红色方框表示总生命,固定大小不变
-    // 绿色方框表示当前生命,受m_currentHp / m_maxHp的变化影响
     static const int Health_Bar_Width = 20;
     painter->save();
-    //qDebug()<<"the pixmap is"<<pixmap;
 
-    if(!map3){
+    if(!map3){//如果不是第三关，则绘制攻击范围
         painter->setPen(Qt::white);
         painter->setBrush(Qt::NoBrush);
         if(attack_range>100)painter->drawEllipse(pos()+QPoint(20,20),attack_range-10,attack_range-10);
     }
-
 
     painter->drawPixmap(get_current_pos(),pixmap);
     painter->setPen(Qt::black);

@@ -8,21 +8,25 @@ Map::Map(QWidget *parent) :
     ui(new Ui::Map)
 {
     ui->setupUi(this);
+    map3 = false;
     //鼠标变手
     ui->backsub->setCursor(QCursor(Qt::PointingHandCursor));
     ui->start->setCursor(QCursor(Qt::PointingHandCursor));
-    timer2 = new QTimer(this);
+
     //每60ms刷新一次页面
     QTimer *timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(updateMap()));
     timer->start(60);
+
+    timer2 = new QTimer(this);
     player = new QMediaPlayer;
     player_bgm = new QMediaPlayer;
     playlist = new QMediaPlaylist;
-    map3 = false;
     res = new Result;
+
 }
 Map::~Map(){
+    //清空航点、敌人、子弹、防御塔
     qDeleteAll(waypoint_list);
     waypoint_list.clear();
     qDeleteAll(elf_list);
@@ -33,28 +37,11 @@ Map::~Map(){
     place_list.clear();
     qDeleteAll(bullet_list);
     bullet_list.clear();
+
     playlist->clear();
     delete player;
     delete player_bgm;
     delete playlist;
-}
-void Map::set_life_total(int n){
-    life_total = n;
-    life_current = n;
-}
-void Map::set_money_start(int n){
-    money_start = n;
-    money_current = n;
-}
-void Map::set_wave_total(int n){
-    wave_total = n;
-    wave_current = 0;
-}
-void Map::set_enemy_load(vector<vector<int>> e1,vector<vector<int>> e2,vector<vector<int>> e3,vector<vector<int>> e4){
-    enemy1_load=e1;
-    enemy2_load=e2;
-    enemy3_load=e3;
-    enemy4_load=e4;
 }
 //绘制
 void Map::paintEvent(QPaintEvent *event){
@@ -86,17 +73,17 @@ void Map::paintEvent(QPaintEvent *event){
     ui->money->setFont(font);
     ui->wave->setFont(font);
     QPalette pa;
-
+    //当前生命
     pa.setColor(QPalette::WindowText,"#CC0000");
     ui->life->setPalette(pa);
     QString str1 = "              "+QString::number(life_current);
     ui->life->setText(str1);
-
+    //当前金币
     pa.setColor(QPalette::WindowText,"#EEEE00");
     ui->money->setPalette(pa);
     QString str2 = "            "+QString::number(money_current);
     ui->money->setText(str2);
-
+    //波数
     pa.setColor(QPalette::WindowText,"#AAAAAA");
     ui->wave->setPalette(pa);
     QString str3 = "            "+QString::number(wave_current)+" / "+QString::number(wave_total);
@@ -121,12 +108,12 @@ void Map::updateMap()
             continue;
         }
         //如果目标点超过射程，移去
-        if(distance(bullet->target_pos(),bullet->start_pos())>=bullet->get_cast_object()->get_range()){
+        if(distance(bullet->get_target_pos(),bullet->get_start_pos())>=bullet->get_cast_object()->get_range()){
             removedBullet(bullet);
             continue;
         }
         //如果子弹超过射程，移去
-        if(distance(bullet->current_pos(),bullet->start_pos())>=bullet->get_cast_object()->get_range()){
+        if(distance(bullet->get_current_pos(),bullet->get_start_pos())>=bullet->get_cast_object()->get_range()){
             removedBullet(bullet);
             continue;
         }
@@ -167,14 +154,39 @@ void Map::updateMap()
     }
     update();
 }
+void Map::set_life_total(int n){
+    life_total = n;
+    life_current = n;
+}
+void Map::set_money_start(int n){
+    money_start = n;
+    money_current = n;
+}
+void Map::set_wave_total(int n){
+    wave_total = n;
+    wave_current = 0;
+}
+void Map::set_enemy_load(vector<vector<int>> e1,
+                         vector<vector<int>> e2,
+                         vector<vector<int>> e3,
+                         vector<vector<int>> e4){
+    enemy1_load=e1;
+    enemy2_load=e2;
+    enemy3_load=e3;
+    enemy4_load=e4;
+}
+//虚函数
+void Map::addPlaces(){}
+void Map::addWayPoints(){}
+
 //怪物进入基地
 void Map::deal_damage(Enemy* e){
     removedEnemy(e);
     money_current += e->get_value();
     life_current--;
+    //如果生命小于等于0，游戏失败
     if(life_current <= 0){
         game_win = false;
-        qDebug()<<"game fail,and game_result should be called";
         game_result();
     }
 }
@@ -208,7 +220,7 @@ void Map::removedBullet(Bullet* bullet){
     bullet_list.removeOne(bullet);
     delete bullet;
 }
-//创建石头怪
+//创建一类防御塔
 void Map::build_rock(Place* p,QPushButton* b){
     int x = p->x();
     int y = p->y();
@@ -233,7 +245,7 @@ void Map::build_rock(Place* p,QPushButton* b){
     rock->setParent(this);
     rock->show();
 }
-//创建紫月兽
+//创建二类防御塔
 void Map::build_ice(Place* p,QPushButton* b){
     int x = p->x();
     int y = p->y();
@@ -258,20 +270,18 @@ void Map::build_ice(Place* p,QPushButton* b){
     ice->setParent(this);
     ice->show();
 }
-//创建沃特种子
+//创建三类防御塔
 void Map::build_grass(Place* p,QPushButton* b){
     int x = p->x();
     int y = p->y();
     Grass* grass;
     grass = new Grass;
-    //qDebug()<<"grass new";
     //如果金钱不够
     if(money_current < grass->get_cost()){
         delete grass;
         b->show();
         return;
     }
-    //qDebug()<<"the money is enough";
     grass->set_button(b);
     money_current -= grass->get_cost();
     grass->set_current_pos(QPoint(x+55,y+50));
@@ -295,10 +305,8 @@ void Map::up_elf(Elf *e){
     //如果金币不够
     if(money_current < e->get_cost() + 20){
         return;
-        qDebug()<<"money is not enough";
     }else{
         //金钱足够
-        qDebug()<<"money is enough";
         money_current -= e->get_cost() + 20;
         e->set_cost(e->get_cost()+20);
         e->up();//升级
@@ -307,13 +315,8 @@ void Map::up_elf(Elf *e){
 }
 //加载波次
 void Map::loadWave(){
-    qDebug()<<"1 the wave_curreny is"<<wave_current;
     if(wave_current == wave_total){
-        //timer1->stop();
-        //delete timer1;
-        qDebug()<<"2 the wave_curreny is"<<wave_current;
         //如果是最后一波，检查敌人是否被完全消灭
-        //timer2 = new QTimer(this);
         connect(timer2,SIGNAL(timeout()),this,SLOT(check_enemy()));
         timer2->start(200);
         return;
@@ -326,22 +329,17 @@ void Map::loadWave(){
             break;
         }
         //如果存在，生成第n波第i个一类敌人
-        qDebug()<<"one enemy1 should be set";
         Enemy1 *enemy1 = new Enemy1;
         if(map3)enemy1->set_max_blood(enemy1->get_current_blood()*5);
-        qDebug()<<"one enemy1 was set";
         enemy1->setParent(this);
         //移至第一航点
         enemy1->set_current_pos(waypoint_list[0]->pos());
         //设置第二行点为目标点
-        enemy1->setdes(waypoint_list[0]);
+        enemy1->set_des(waypoint_list[0]);
         enemy_list.push_back(enemy1);
         object_list.push_back(enemy1);
-        //qDebug()<<wave_current<<"  "<<i;
-        //qDebug()<<"load time is"<<enemy1_load[wave_current][i];
-        QTimer::singleShot(enemy1_load[wave_current][i], enemy1, SLOT(doActiate()));    //定时
+        QTimer::singleShot(enemy1_load[wave_current][i], enemy1, SLOT(change_act_ablt()));    //定时
     }
-    qDebug()<<"1enemy were set";
     //生成二类敌人
     for(int i=0;i<6;i++ ){
         //如果第n波第i个二类敌人不存在
@@ -355,12 +353,11 @@ void Map::loadWave(){
         //移至第一航点
         enemy2->set_current_pos(waypoint_list[0]->pos());
         //设置第二行点为目标点
-        enemy2->setdes(waypoint_list.last());
+        enemy2->set_des(waypoint_list.last());
         enemy_list.push_back(enemy2);
         object_list.push_back(enemy2);
-        QTimer::singleShot(enemy2_load[wave_current][i], enemy2, SLOT(doActiate()));    //定时
+        QTimer::singleShot(enemy2_load[wave_current][i], enemy2, SLOT(change_act_ablt()));    //定时
     }
-    qDebug()<<"2enemy were set";
     //生成三类敌人（可攻击）
     for(int i=0;i<6;i++ ){
         //如果第n波第i个二类敌人不存在
@@ -374,13 +371,12 @@ void Map::loadWave(){
         //移至第一航点
         enemy3->set_current_pos(waypoint_list[0]->pos());
         //设置第二行点为目标点
-        enemy3->setdes(waypoint_list[0]);
+        enemy3->set_des(waypoint_list[0]);
         enemy_list.push_back(enemy3);
         object_list.push_back(enemy3);
         enemy3_list.push_back(enemy3);
-        QTimer::singleShot(enemy3_load[wave_current][i], enemy3, SLOT(doActiate()));    //定时
+        QTimer::singleShot(enemy3_load[wave_current][i], enemy3, SLOT(change_act_ablt()));    //定时
     }
-    qDebug()<<"3enemy were set";
     //生成四类敌人
     for(int i=0;i<6;i++ ){
         //如果第n波第i个二类敌人不存在
@@ -394,12 +390,11 @@ void Map::loadWave(){
         //移至第一航点
         enemy4->set_current_pos(waypoint_list[0]->pos());
         //设置第二行点为目标点
-        enemy4->setdes(waypoint_list[0]);
+        enemy4->set_des(waypoint_list[0]);
         enemy_list.push_back(enemy4);
         object_list.push_back(enemy4);
-        QTimer::singleShot(enemy4_load[wave_current][i], enemy4, SLOT(doActiate()));    //定时
+        QTimer::singleShot(enemy4_load[wave_current][i], enemy4, SLOT(change_act_ablt()));    //定时
     }
-    qDebug()<<"4enemy were set";
     //如果不是最后一波，当前波次+1
     wave_current++;
     return;
@@ -408,17 +403,13 @@ void Map::loadWave(){
 void Map::attack(Object *attacker,Object *target){
     connect(attacker,&Object::timer_ptr,this,delete_ptr);
     //如果在冷却中
-    //qDebug()<<"attack_ablt"<<attacker->get_attack_ablt();
     if(!attacker->get_attack_ablt())return;
     //如果冷却结束
     Bullet *bullet = new Bullet;
-    //qDebug()<<"one bullet was cast";
 
-    //QMediaPlayer *player = new QMediaPlayer;
     player->setMedia(QUrl("qrc:/sound/sound/bullet/shoot.mp3"));
     player->setVolume(30);
     player->play();
-    //QTimer::singleShot(100,player,SLOT(deleteLater()));
 
     bullet->setParent(this);
     //如果攻击者有冰属性，则子弹有冰属性
@@ -427,7 +418,7 @@ void Map::attack(Object *attacker,Object *target){
     bullet->set_damage(attacker->get_damage());
     bullet->set_cast_object(attacker);
     bullet->set_pixmap(attacker->get_bullet_pix());
-    bullet->set_current(attacker->get_current_pos());
+    bullet->set_current_pos(attacker->get_current_pos());
     bullet->set_target_object(target);
     bullet_list.push_back(bullet);
     //攻击者冷却
@@ -437,22 +428,17 @@ void Map::attack(Object *attacker,Object *target){
 }
 //判定游戏结果
 void Map::game_result(){
-    qDebug()<<"0 game_result was called";
     timer1->stop();
     delete timer1;
-    qDebug()<<"1 game_result was called";
     foreach (Bullet *bullet, bullet_list) {
         removedBullet(bullet);
     }
-    qDebug()<<"bullet was moved";
     foreach (Enemy *enemy, enemy_list) {
-        enemy->doActiate();
+        enemy->change_act_ablt();
     }
-    qDebug()<<"enemy was moved";
     foreach (Elf *elf, elf_list) {
         elf->set_CD_time(3600000);
     }
-    qDebug()<<"elf was moved";
 
     connect(res,&Result::restart,this,&Map::deal_restart);
     connect(res,&Result::quit,this,&Map::deal_quit);
@@ -503,6 +489,9 @@ void Map::on_start_clicked()
     player->setVolume(30);
     player->play();
 
+    addPlaces();        //添加防御点
+    addWayPoints();     //添加航点
+
     //开始第一波
     loadWave();
     //每30秒进行下一波
@@ -514,7 +503,6 @@ void Map::on_start_clicked()
 void Map::check_enemy(){
     if(enemy_list.empty()){
         game_win = true;
-        //timer2->stop();
         delete timer2;
         game_result();
         return;
@@ -533,8 +521,6 @@ Map1::Map1(Map *parent) :
     set_life_total(5);                          //总生命为5
     set_money_start(500);                       //初始金币210
     set_wave_total(5);                          //总波数为5
-    addPlaces();        //添加防御点
-    addWayPoints();     //添加航点
     pix1 = QPixmap(":/images/images/maps/res2.png");
     pix2 = QPixmap(":/images/images/maps/res1.png");
     //设定怪物数量
@@ -646,7 +632,6 @@ void Map1::addWayPoints(){
     waypoint_list.push_back(waypoint11);
     waypoint10->setNext(waypoint11);
 }
-//Map1::set_enemy(){}
 //地图2
 Map2::Map2(Map *parent) :
     Map(parent)
@@ -947,13 +932,15 @@ Result::Result(QWidget *parent):
 Result::~Result(){
     delete ui;
 }
+//游戏胜利
 void Result::win(){
+    //如果是第三关
     if(last)ui->image->setStyleSheet(tr("image: url(:/images/images/maps/res3.png);"));
-    else {
-        ui->image->setStyleSheet(tr("image: url(:/images/images/maps/res2.png);"));
-    }
+    else ui->image->setStyleSheet(tr("image: url(:/images/images/maps/res2.png);"));
+
     ui->widget->setStyleSheet(tr("border-image: url(:/images/images/maps/win.png);"));
 }
+//游戏失败
 void Result::fail(){
     ui->image->setStyleSheet(tr("image: url(:/images/images/maps/res1.png);"));
     ui->widget->setStyleSheet(tr("border-image: url(:/images/images/maps/fail.png);"));

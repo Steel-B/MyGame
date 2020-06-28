@@ -16,56 +16,38 @@ Option::Option(QWidget *parent):
 Option::~Option(){
     delete ui;
 }
-void Option::set_elf(Elf *e,QPainter* p){
-    elf = e;
-}
-//售卖防御塔
-void Option::on_sell_clicked()
-{
-    emit sell();
-}
-//升级防御塔
-void Option::on_up_clicked()
-{
-    emit up();
-}
-//关闭选项
-void Option::on_cancel2_clicked()
-{
-    delete this;
-}
-
 
 Elf::Elf(Object *parent) :
     Object(parent)
 {
-    //this->setCursor(QCursor(Qt::PointingHandCursor));
+    //点击防御塔显示选项界面
     connect(this,&Elf::clicked,this,&Elf::option_show);
 }
 Elf::~Elf(){
 }
+//显示选项页面
 void Elf::option_show(){
     opt = new Option;
     connect(opt,SIGNAL(sell()),this,SLOT(sell()));
     connect(opt,SIGNAL(up()),this,SLOT(up_signal_emit()));
     opt->setParent(this->parentWidget());
-    //QPainter *painter = new QPainter(&pixmap);
-    //opt->set_elf(this,painter);
     opt->move(get_current_pos()+QPoint(-80,-85)+QPoint((pixmap.width()-pixmap1.width())/2,(pixmap.height()-pixmap1.height())/2));
     opt->show();
 }
+//出售防御塔
 void Elf::sell(){
     emit sell_signal(this);
     delete opt;
 }
+//发出升级信号
 void Elf::up_signal_emit(){
-    qDebug()<<"up";
     //三级以下才能升级
     if(level < 3)emit up_signal(this);
     delete opt;
 }
-void Elf::up(){
-}
+//防御塔升级（虚函数）
+void Elf::up(){}
+
 Rock::Rock(Elf *parent):
     Elf(parent)
 {
@@ -85,6 +67,7 @@ Rock::Rock(Elf *parent):
 }
 Rock::~Rock(){
 }
+//一类防御塔升级
 void Rock::up(){
     if(level == 3)return;
     if(level == 1){
@@ -127,6 +110,7 @@ Ice::Ice(Elf *parent):
 }
 Ice::~Ice(){
 }
+//二类防御塔升级
 void Ice::up(){
     if(level == 3)return;
     if(level == 1){
@@ -168,6 +152,7 @@ Grass::Grass(Elf *parent):
 }
 Grass::~Grass(){
 }
+//三类防御塔升级
 void Grass::up(){
     if(level == 3)return;
     if(level == 1){
